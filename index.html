@@ -1,7 +1,279 @@
-<div style="width: 800px">
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangladesh Districts Map</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Tagline Section */
+        .tagline-section {
+            text-align: center;
+            margin: 2rem 0;
+            color: white;
+        }
+
+        .tagline {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Districts Display */
+        .districts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .district-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .district-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .district-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .district-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Map Container */
+        .map-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .map-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        svg {
+            width: 50%;
+            height: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        svg path {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        svg path:hover {
+            transform: scale(1.02);
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .tagline {
+                font-size: 2rem;
+            }
+
+            .districts-container {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .map-container {
+                padding: 1rem;
+                margin: 1rem 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tagline {
+                font-size: 1.5rem;
+            }
+
+            .districts-container {
+                grid-template-columns: 1fr;
+            }
+
+            .district-card {
+                padding: 1rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            color: white;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">BD Maps</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#districts">Districts</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Tagline Section -->
+        <div class="text-center my-8 text-white">
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 drop-shadow-lg">Find These Districts</h1>
+        </div>
+
+        <!-- Districts Display - Compact Design -->
+        <div id="todaysDistricts" class="max-w-4xl mx-auto mb-8">
+            <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+                <!-- Districts will be dynamically populated here -->
+            </div>
+        </div>
+
+        <!-- Game Status and Controls -->
+        <div class="max-w-2xl mx-auto mb-8 text-center">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                <div class="text-white mb-4">
+                    <div id="gameStatus" class="text-lg font-semibold mb-2">চেষ্টা: 0/5 | নির্বাচিত: 0/4</div>
+                    <div class="text-sm text-gray-200">
+                        <span class="inline-block w-4 h-4 bg-green-500 rounded mr-2"></span>সঠিক
+                        <span class="inline-block w-4 h-4 bg-yellow-500 rounded mr-2 ml-4"></span>একই বিভাগ
+                        <span class="inline-block w-4 h-4 bg-red-500 rounded mr-2 ml-4"></span>ভুল
+                    </div>
+                </div>
+                <button id="resetGame" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 font-semibold">
+                    নতুন গেম (New Game)
+                </button>
+            </div>
+        </div>
+
+        <!-- Map Container -->
+        <div class="map-container">
+            <div class="map-wrapper">
+<!-- 
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -17,7 +289,22 @@
    inkscape:version="0.48.3.1 r9886"
    version="1.0"
    sodipodi:docname="BD_Districts.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"> -->
+   <svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 1530.748 2138"
+   id="svg1895"
+   sodipodi:version="0.32"
+   inkscape:version="0.48.3.1 r9886"
+   version="1.0"
+   sodipodi:docname="BD_Districts.svg"
+   inkscape:output-extension="org.inkscape.output.svg.inkscape">
   <defs
      id="defs3" />
   <sodipodi:namedview
@@ -32,8 +319,6 @@
      inkscape:cx="847.14926"
      inkscape:cy="1214.4241"
      inkscape:current-layer="layer1"
-     width="1530.748px"
-     height="2138px"
      showborder="true"
      inkscape:window-width="1301"
      inkscape:window-height="744"
@@ -481,20 +766,839 @@
        inkscape:connector-curvature="0" />
   </g>
 </svg>
+            </div>
+        </div>
+    </div>
 
-</div>
+    <script>
+        // District information map - extracted from SVG path IDs with additional info
+        const districtsMap = {
+            'rajshahi': {
+                english: 'Rajshahi',
+                bangla: 'রাজশাহী',
+                info: 'Known as the Silk City of Bangladesh',
+                division: 'Rajshahi'
+            },
+            'nilphamari': {
+                english: 'Nilphamari',
+                bangla: 'নীলফামারী',
+                info: 'Northern district famous for agriculture',
+                division: 'Rangpur'
+            },
+            'panchagarh': {
+                english: 'Panchagarh',
+                bangla: 'পঞ্চগড়',
+                info: 'Northernmost district of Bangladesh',
+                division: 'Rangpur'
+            },
+            'thakurgaon': {
+                english: 'Thakurgaon',
+                bangla: 'ঠাকুরগাঁও',
+                info: 'Known for rice and maize production',
+                division: 'Rangpur'
+            },
+            'lalmonirhat': {
+                english: 'Lalmonirhat',
+                bangla: 'লালমনিরহাট',
+                info: 'Agricultural district in northern Bangladesh',
+                division: 'Rangpur'
+            },
+            'dinajpur': {
+                english: 'Dinajpur',
+                bangla: 'দিনাজপুর',
+                info: 'Rich in history and archaeological sites',
+                division: 'Rangpur'
+            },
+            'rangpur': {
+                english: 'Rangpur',
+                bangla: 'রংপুর',
+                info: 'Major divisional city in northern region',
+                division: 'Rangpur'
+            },
+            'kurigram': {
+                english: 'Kurigram',
+                bangla: 'কুড়িগ্রাম',
+                info: 'River district prone to flooding',
+                division: 'Rangpur'
+            },
+            'gaibandha': {
+                english: 'Gaibandha',
+                bangla: 'গাইবান্ধা',
+                info: 'Known for agricultural production',
+                division: 'Rangpur'
+            },
+            'joypurhat': {
+                english: 'Joypurhat',
+                bangla: 'জয়পুরহাট',
+                info: 'Small district rich in minerals',
+                division: 'Rajshahi'
+            },
+            'naogaon': {
+                english: 'Naogaon',
+                bangla: 'নওগাঁ',
+                info: 'Famous for Paharpur Buddhist Monastery',
+                division: 'Rajshahi'
+            },
+            'nawabganj': {
+                english: 'Nawabganj',
+                bangla: 'নবাবগঞ্জ',
+                info: 'Agricultural district in Rajshahi division',
+                division: 'Rajshahi'
+            },
+            'bogra': {
+                english: 'Bogura',
+                bangla: 'বগুড়া',
+                info: 'Ancient city with rich cultural heritage',
+                division: 'Rajshahi'
+            },
+            'natore': {
+                english: 'Natore',
+                bangla: 'নাটোর',
+                info: 'Historic district known for Rajbari',
+                division: 'Rajshahi'
+            },
+            'sirajganj': {
+                english: 'Sirajganj',
+                bangla: 'সিরাজগঞ্জ',
+                info: 'Industrial district on Jamuna river',
+                division: 'Rajshahi'
+            },
+            'pabna': {
+                english: 'Pabna',
+                bangla: 'পাবনা',
+                info: 'Known for mental hospital and education',
+                division: 'Rajshahi'
+            },
+            'kushtia': {
+                english: 'Kushtia',
+                bangla: 'কুষ্টিয়া',
+                info: 'Birthplace of poet Lalon Shah',
+                division: 'Khulna'
+            },
+            'rajbari': {
+                english: 'Rajbari',
+                bangla: 'রাজবাড়ী',
+                info: 'Small district known for agriculture',
+                division: 'Dhaka'
+            },
+            'meherpur': {
+                english: 'Meherpur',
+                bangla: 'মেহেরপুর',
+                info: 'Historic significance in Liberation War',
+                division: 'Khulna'
+            },
+            'chuadanga': {
+                english: 'Chuadanga',
+                bangla: 'চুয়াডাঙ্গা',
+                info: 'Border district with India',
+                division: 'Khulna'
+            },
+            'jhenaidah': {
+                english: 'Jhenaidah',
+                bangla: 'ঝিনাইদহ',
+                info: 'Known for shrimp and fish farming',
+                division: 'Khulna'
+            },
+            'magura': {
+                english: 'Magura',
+                bangla: 'মাগুরা',
+                info: 'Agricultural district in Khulna division',
+                division: 'Khulna'
+            },
+            'jessore': {
+                english: 'Jashore',
+                bangla: 'যশোর',
+                info: 'Historic city and important trade center',
+                division: 'Khulna'
+            },
+            'narail': {
+                english: 'Narail',
+                bangla: 'নড়াইল',
+                info: 'Small district known for rice production',
+                division: 'Khulna'
+            },
+            'satkhira': {
+                english: 'Satkhira',
+                bangla: 'সাতক্ষীরা',
+                info: 'Coastal district famous for Sundarbans',
+                division: 'Khulna'
+            },
+            'khulna': {
+                english: 'Khulna',
+                bangla: 'খুলনা',
+                info: 'Major port city and industrial center',
+                division: 'Khulna'
+            },
+            'faridpur': {
+                english: 'Faridpur',
+                bangla: 'ফরিদপুর',
+                info: 'Historic district on Padma river',
+                division: 'Dhaka'
+            },
+            'gopalganj': {
+                english: 'Gopalganj',
+                bangla: 'গোপালগঞ্জ',
+                info: 'Birthplace of Sheikh Mujibur Rahman',
+                division: 'Dhaka'
+            },
+            'bagerhat': {
+                english: 'Bagerhat',
+                bangla: 'বাগেরহাট',
+                info: 'UNESCO World Heritage site location',
+                division: 'Khulna'
+            },
+            'jamalpur': {
+                english: 'Jamalpur',
+                bangla: 'জামালপুর',
+                info: 'Known for handloom and metalworks',
+                division: 'Mymensingh'
+            },
+            'tangail': {
+                english: 'Tangail',
+                bangla: 'টাঙ্গাইল',
+                info: 'Famous for Tangail sarees',
+                division: 'Dhaka'
+            },
+            'manikganj': {
+                english: 'Manikganj',
+                bangla: 'মানিকগঞ্জ',
+                info: 'Historic district near Dhaka',
+                division: 'Dhaka'
+            },
+            'dhaka': {
+                english: 'Dhaka',
+                bangla: 'ঢাকা',
+                info: 'Capital and largest city of Bangladesh',
+                division: 'Dhaka'
+            },
+            'madaripur': {
+                english: 'Madaripur',
+                bangla: 'মাদারীপুর',
+                info: 'Known for hilsa fish and agriculture',
+                division: 'Dhaka'
+            },
+            'shariatpur': {
+                english: 'Shariatpur',
+                bangla: 'শরীয়তপুর',
+                info: 'River district known for boat making',
+                division: 'Dhaka'
+            },
+            'gazipur': {
+                english: 'Gazipur',
+                bangla: 'গাজীপুর',
+                info: 'Industrial city near Dhaka',
+                division: 'Dhaka'
+            },
+            'sherpur': {
+                english: 'Sherpur',
+                bangla: 'শেরপুর',
+                info: 'Known for archaeological sites',
+                division: 'Mymensingh'
+            },
+            'mymenshingh': {
+                english: 'Mymensingh',
+                bangla: 'ময়মনসিংহ',
+                info: 'Educational hub and divisional city',
+                division: 'Mymensingh'
+            },
+            'kishoreganj': {
+                english: 'Kishoreganj',
+                bangla: 'কিশোরগঞ্জ',
+                info: 'Known for haor wetlands',
+                division: 'Dhaka'
+            },
+            'netrokona': {
+                english: 'Netrokona',
+                bangla: 'নেত্রকোনা',
+                info: 'Beautiful haor region',
+                division: 'Mymensingh'
+            },
+            'sunamganj': {
+                english: 'Sunamganj',
+                bangla: 'সুনামগঞ্জ',
+                info: 'Famous for stone and haor ecosystem',
+                division: 'Sylhet'
+            },
+            'sylhet': {
+                english: 'Sylhet',
+                bangla: 'সিলেট',
+                info: 'Tea garden region and major city',
+                division: 'Sylhet'
+            },
+            'habiganj': {
+                english: 'Habiganj',
+                bangla: 'হবিগঞ্জ',
+                info: 'Known for tea gardens and gas fields',
+                division: 'Sylhet'
+            },
+            'moulovibazar': {
+                english: 'Moulvibazar',
+                bangla: 'মৌলভীবাজার',
+                info: 'Major tea producing district',
+                division: 'Sylhet'
+            },
+            'narshingdi': {
+                english: 'Narsingdi',
+                bangla: 'নরসিংদী',
+                info: 'Known for handloom industry',
+                division: 'Dhaka'
+            },
+            'narayanganj': {
+                english: 'Narayanganj',
+                bangla: 'নারায়ণগঞ্জ',
+                info: 'Major river port and industrial city',
+                division: 'Dhaka'
+            },
+            'brahmanbaria': {
+                english: 'Brahmanbaria',
+                bangla: 'ব্রাহ্মণবাড়িয়া',
+                info: 'Known for natural gas and education',
+                division: 'Chittagong'
+            },
+            'munshiganj': {
+                english: 'Munshiganj',
+                bangla: 'মুন্শিগঞ্জ',
+                info: 'Historic district near Dhaka',
+                division: 'Dhaka'
+            },
+            'comilla': {
+                english: 'Cumilla',
+                bangla: 'কুমিল্লা',
+                info: 'Ancient city with rich heritage',
+                division: 'Chittagong'
+            },
+            'chandpur': {
+                english: 'Chandpur',
+                bangla: 'চাঁদপুর',
+                info: 'Known for hilsa fish',
+                division: 'Chittagong'
+            },
+            'laxmipur': {
+                english: 'Lakshmipur',
+                bangla: 'লক্ষ্মীপুর',
+                info: 'Coastal district known for agriculture',
+                division: 'Chittagong'
+            },
+            'perojpur': {
+                english: 'Pirojpur',
+                bangla: 'পিরোজপুর',
+                info: 'Known for rice and coconut production',
+                division: 'Barisal'
+            },
+            'barisal': {
+                english: 'Barisal',
+                bangla: 'বরিশাল',
+                info: 'Major port city and divisional headquarters',
+                division: 'Barisal'
+            },
+            'bhola': {
+                english: 'Bhola',
+                bangla: 'ভোলা',
+                info: 'Island district in the Bay of Bengal',
+                division: 'Barisal'
+            },
+            'patuakhali': {
+                english: 'Patuakhali',
+                bangla: 'পটুয়াখালী',
+                info: 'Coastal district famous for Kuakata beach',
+                division: 'Barisal'
+            },
+            'barguna': {
+                english: 'Barguna',
+                bangla: 'বরগুনা',
+                info: 'Coastal district known for fishing',
+                division: 'Barisal'
+            },
+            'jhalokati': {
+                english: 'Jhalokati',
+                bangla: 'ঝালকাঠি',
+                info: 'Small district with river networks',
+                division: 'Barisal'
+            },
+            'chittagong': {
+                english: 'Chittagong',
+                bangla: 'চট্টগ্রাম',
+                info: 'Major port city and commercial hub',
+                division: 'Chittagong'
+            },
+            'rangamati': {
+                english: 'Rangamati',
+                bangla: 'রাঙামাটি',
+                info: 'Hill district known for Kaptai Lake',
+                division: 'Chittagong'
+            },
+            'bandarban': {
+                english: 'Bandarban',
+                bangla: 'বান্দরবান',
+                info: 'Mountainous district with highest peaks',
+                division: 'Chittagong'
+            },
+            'khagrachhari': {
+                english: 'Khagrachhari',
+                bangla: 'খাগড়াছড়ি',
+                info: 'Hill district with diverse tribal culture',
+                division: 'Chittagong'
+            },
+            'coxsbazar': {
+                english: 'Cox\'s Bazar',
+                bangla: 'কক্সবাজার',
+                info: 'Famous for longest natural sea beach',
+                division: 'Chittagong'
+            },
+            'feni': {
+                english: 'Feni',
+                bangla: 'ফেনী',
+                info: 'Border district known for trade',
+                division: 'Chittagong'
+            },
+            'noakhali': {
+                english: 'Noakhali',
+                bangla: 'নোয়াখালী',
+                info: 'Coastal district with agricultural importance',
+                division: 'Chittagong'
+            }
+        };
 
-<script>
-  document.querySelectorAll('svg path').forEach(path => {
-    path.addEventListener('mouseenter', () => {
-      path.style.fill = '#ffcc00'; // highlight on hover
-    });
-    path.addEventListener('mouseleave', () => {
-      path.style.fill = '#9a9a9a'; // back to default
-    });
-    path.addEventListener('click', () => {
-      alert('You clicked on: ' + path.id);
-      // you can also trigger a route or do something else here
-    });
-  });
-</script>
+        // Function to get district info by ID
+        function getDistrictInfo(pathId) {
+            return districtsMap[pathId] || {
+                english: pathId.charAt(0).toUpperCase() + pathId.slice(1),
+                bangla: 'তথ্য নেই',
+                info: 'Information not available'
+            };
+        }
+
+        // Function to get the total number of districts in the map
+        function getDistrictsCount() {
+            return Object.keys(districtsMap).length;
+        }
+
+        // Function to get all district names as an array
+        function getAllDistrictNames() {
+            return Object.keys(districtsMap);
+        }
+
+        // Function to search districts by name
+        function searchDistricts(searchTerm) {
+            return Object.keys(districtsMap).filter(key => {
+                const district = districtsMap[key];
+                return district.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                       district.bangla.includes(searchTerm) ||
+                       key.toLowerCase().includes(searchTerm.toLowerCase());
+            });
+        }
+
+        // Log some useful information about the districts map
+        console.log(`Total districts in map: ${getDistrictsCount()}`);
+        console.log('All district IDs:', getAllDistrictNames());
+
+        // Sample API response - in real implementation, this would come from your API
+        const sampleApiResponse = "4-33-2-1"; // Sample string for today's districts
+
+        // Function to simulate API call
+        async function getTodaysDistrictsString() {
+            // Simulate API delay
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(sampleApiResponse);
+                }, 100);
+            });
+        }
+
+        // Function to get districts array from the map
+        function getDistrictsArray() {
+            return Object.keys(districtsMap);
+        }
+
+        // Function to parse districts string and get selected districts
+        function parseDistrictsString(districtsString) {
+            const indices = districtsString.split('-').map(num => parseInt(num));
+            const allDistricts = getDistrictsArray();
+            
+            return indices.map(index => {
+                if (index >= 0 && index < allDistricts.length) {
+                    const districtId = allDistricts[index];
+                    return {
+                        id: districtId,
+                        ...districtsMap[districtId]
+                    };
+                }
+                return null;
+            }).filter(district => district !== null);
+        }
+
+        // Function to create district card element
+        function createDistrictCard(district) {
+            const card = document.createElement('div');
+            card.className = `
+                relative bg-white/90 backdrop-blur-sm rounded-xl p-3 md:p-4 
+                shadow-lg hover:shadow-xl transition-all duration-300 
+                cursor-pointer transform hover:scale-105 
+                border border-white/20 group
+                min-w-[120px] md:min-w-[140px] text-center
+            `;
+            
+            card.innerHTML = `
+                <div class="text-blue-600 font-bold text-sm md:text-base mb-1">
+                    ${district.bangla}
+                </div>
+                <div class="text-gray-600 text-xs hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    ${district.info}
+                </div>
+                <!-- Tooltip for mobile -->
+                <div class="md:hidden text-gray-500 text-xs mt-1">
+                    ${district.english}
+                </div>
+            `;
+
+            // Add click event to highlight district on map
+            card.addEventListener('click', () => {
+                highlightDistrictOnMap(district.id);
+                showNotification(`${district.bangla} (${district.english})\n${district.info}`, 'info');
+            });
+
+            return card;
+        }
+
+        // Function to highlight district on map
+        function highlightDistrictOnMap(districtId) {
+            const districtPath = document.getElementById(districtId);
+            if (districtPath) {
+                // Reset all districts first
+                document.querySelectorAll('svg path').forEach(path => {
+                    path.style.fill = '#9a9a9a';
+                    path.style.strokeWidth = '1px';
+                });
+                
+                // Highlight selected district
+                districtPath.style.fill = '#667eea';
+                districtPath.style.strokeWidth = '3px';
+                districtPath.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Reset after 3 seconds
+                setTimeout(() => {
+                    districtPath.style.fill = '#9a9a9a';
+                    districtPath.style.strokeWidth = '1px';
+                }, 3000);
+            }
+        }
+
+        // Function to populate today's districts
+        async function populateTodaysDistricts() {
+            try {
+                const districtsString = await getTodaysDistrictsString();
+                const selectedDistricts = parseDistrictsString(districtsString);
+                
+                const container = document.getElementById('todaysDistricts').querySelector('div');
+                container.innerHTML = ''; // Clear existing content
+                
+                selectedDistricts.forEach(district => {
+                    const card = createDistrictCard(district);
+                    container.appendChild(card);
+                });
+                
+                console.log('Today\'s districts:', selectedDistricts);
+            } catch (error) {
+                console.error('Error loading today\'s districts:', error);
+                // Fallback to default districts
+                const fallbackDistricts = ['dhaka', 'chittagong', 'sylhet', 'rajshahi'];
+                const container = document.getElementById('todaysDistricts').querySelector('div');
+                container.innerHTML = '';
+                
+                fallbackDistricts.forEach(districtId => {
+                    if (districtsMap[districtId]) {
+                        const district = { id: districtId, ...districtsMap[districtId] };
+                        const card = createDistrictCard(district);
+                        container.appendChild(card);
+                    }
+                });
+            }
+        }
+
+        // Game state variables
+        let selectedDistricts = [];
+        let targetDistricts = [];
+        let currentTry = 0;
+        const maxTries = 5;
+        let gameEnded = false;
+        let districtStates = {}; // Track colors for each district
+
+        // Function to get target districts from API
+        async function initializeGame() {
+            try {
+                const districtsString = await getTodaysDistrictsString();
+                const selectedTargets = parseDistrictsString(districtsString);
+                targetDistricts = selectedTargets.map(d => d.id);
+                console.log('Target districts:', targetDistricts);
+                
+                // Reset game state
+                selectedDistricts = [];
+                currentTry = 0;
+                gameEnded = false;
+                districtStates = {};
+                
+                // Reset all district colors
+                resetAllDistrictColors();
+                
+                return true;
+            } catch (error) {
+                console.error('Error initializing game:', error);
+                return false;
+            }
+        }
+
+        // Function to reset all district colors
+        function resetAllDistrictColors() {
+            document.querySelectorAll('svg path').forEach(path => {
+                if (path.id && districtsMap[path.id]) {
+                    path.style.fill = '#9a9a9a';
+                    path.style.strokeWidth = '1px';
+                }
+            });
+            districtStates = {};
+        }
+
+        // Function to update game status display
+        function updateGameStatus() {
+            const statusElement = document.getElementById('gameStatus');
+            if (statusElement) {
+                statusElement.textContent = `চেষ্টা: ${currentTry}/${maxTries} | নির্বাচিত: ${selectedDistricts.length}/4`;
+            }
+        }
+
+        // Function to add district to selection
+        function selectDistrict(districtId) {
+            if (gameEnded) return;
+            
+            // Check if already selected in current try
+            if (selectedDistricts.includes(districtId)) {
+                showNotification('জেলা ইতিমধ্যে নির্বাচিত! (District already selected!)', 'warning');
+                return;
+            }
+            
+            // Add to selection
+            selectedDistricts.push(districtId);
+            updateGameStatus();
+            
+            // Visual feedback
+            const path = document.getElementById(districtId);
+            if (path) {
+                path.style.fill = '#f39c12'; // Orange for pending selection
+                path.style.strokeWidth = '2px';
+            }
+            
+            const districtInfo = getDistrictInfo(districtId);
+            showNotification(`নির্বাচিত: ${districtInfo.bangla} (${selectedDistricts.length}/4)`, 'info');
+            
+            // If 4 districts selected, evaluate
+            if (selectedDistricts.length === 4) {
+                setTimeout(() => evaluateSelection(), 500);
+            }
+        }
+
+        // Function to evaluate the current selection
+        function evaluateSelection() {
+            currentTry++;
+            updateGameStatus();
+            
+            selectedDistricts.forEach(districtId => {
+                const path = document.getElementById(districtId);
+                if (!path) return;
+                
+                if (targetDistricts.includes(districtId)) {
+                    // Correct guess - green
+                    path.style.fill = '#27ae60';
+                    districtStates[districtId] = 'correct';
+                    path.style.strokeWidth = '3px';
+                } else {
+                    // Check if same division
+                    const selectedDistrict = districtsMap[districtId];
+                    const isCorrectDivision = targetDistricts.some(targetId => {
+                        const targetDistrict = districtsMap[targetId];
+                        return targetDistrict && selectedDistrict && 
+                               targetDistrict.division === selectedDistrict.division;
+                    });
+                    
+                    if (isCorrectDivision) {
+                        // Same division - yellow
+                        path.style.fill = '#f1c40f';
+                        districtStates[districtId] = 'wrong-division';
+                        path.style.strokeWidth = '2px';
+                    } else {
+                        // Wrong - red
+                        path.style.fill = '#e74c3c';
+                        districtStates[districtId] = 'wrong';
+                        path.style.strokeWidth = '2px';
+                    }
+                }
+            });
+            
+            // Check if game won
+            const correctCount = selectedDistricts.filter(id => targetDistricts.includes(id)).length;
+            if (correctCount === 4) {
+                gameEnded = true;
+                showNotification('🎉 অভিনন্দন! আপনি জিতেছেন! (Congratulations! You won!)', 'success');
+                updateGameStatus();
+                return;
+            }
+            
+            // Check if game over
+            if (currentTry >= maxTries) {
+                gameEnded = true;
+                const targetNames = targetDistricts.map(id => districtsMap[id].bangla).join(', ');
+                showNotification(`😞 গেম শেষ! সঠিক উত্তর: ${targetNames}`, 'error');
+                
+                // Highlight correct districts
+                targetDistricts.forEach(id => {
+                    const path = document.getElementById(id);
+                    if (path && !districtStates[id]) {
+                        path.style.fill = '#27ae60';
+                        path.style.strokeWidth = '3px';
+                    }
+                });
+                updateGameStatus();
+                return;
+            }
+            
+            // Reset for next try
+            selectedDistricts = [];
+            updateGameStatus();
+            showNotification(`চেষ্টা ${currentTry}/${maxTries} সম্পন্ন। পরবর্তী চেষ্টার জন্য আবার ৪টি জেলা নির্বাচন করুন।`, 'info');
+        }
+
+        // Enhanced interactivity for the map
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize game
+            initializeGame();
+            
+            // Populate today's districts
+            populateTodaysDistricts();
+            const paths = document.querySelectorAll('svg path');
+            
+            // Map interactivity
+            paths.forEach(path => {
+                path.addEventListener('mouseenter', () => {
+                    if (!districtStates[path.id] && !gameEnded) {
+                        path.style.fill = '#667eea';
+                        path.style.strokeWidth = '2px';
+                    }
+                });
+                
+                path.addEventListener('mouseleave', () => {
+                    if (!districtStates[path.id] && !selectedDistricts.includes(path.id) && !gameEnded) {
+                        path.style.fill = '#9a9a9a';
+                        path.style.strokeWidth = '1px';
+                    }
+                });
+                
+                path.addEventListener('click', () => {
+                    if (gameEnded) {
+                        const districtInfo = getDistrictInfo(path.id);
+                        showNotification(`${districtInfo.bangla}: ${districtInfo.info}`, 'info');
+                        return;
+                    }
+                    
+                    // Select district for the game
+                    if (districtsMap[path.id]) {
+                        selectDistrict(path.id);
+                    }
+                });
+            });
+
+            // Smooth scroll for navigation links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const href = link.getAttribute('href');
+                    
+                    if (href.startsWith('#')) {
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            // Reset game button functionality
+            document.getElementById('resetGame').addEventListener('click', function() {
+                initializeGame();
+                populateTodaysDistricts();
+                updateGameStatus();
+                showNotification('নতুন গেম শুরু হয়েছে! (New game started!)', 'success');
+            });
+
+            // Initialize game status display
+            updateGameStatus();
+        });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            
+            // Styles for notification
+            Object.assign(notification.style, {
+                position: 'fixed',
+                top: '20px',
+                right: '20px',
+                padding: '15px 20px',
+                borderRadius: '10px',
+                color: 'white',
+                fontWeight: 'bold',
+                zIndex: '1000',
+                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+                transform: 'translateX(100%)',
+                transition: 'transform 0.3s ease',
+                maxWidth: '300px'
+            });
+
+            // Set background color based on type
+            const colors = {
+                success: '#4CAF50',
+                info: '#2196F3',
+                warning: '#FF9800',
+                error: '#f44336'
+            };
+            notification.style.backgroundColor = colors[type] || colors.info;
+
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Animate out and remove
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Add responsive behavior for mobile menu (if needed in future)
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('mobile-active');
+        }
+
+        // Add search functionality for districts (future enhancement)
+        function searchDistrict(query) {
+            const paths = document.querySelectorAll('svg path');
+            paths.forEach(path => {
+                if (path.id.toLowerCase().includes(query.toLowerCase())) {
+                    path.style.fill = '#667eea';
+                    path.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    path.style.fill = '#9a9a9a';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
