@@ -1935,9 +1935,38 @@
             async function getTodaysDistrictsString() {
                 // Simulate API delay
                 return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve(sampleApiResponse);
-                    }, 100);
+                    // Try to fetch from API first
+                    fetch('https://intel.dreamjim.xyz/desi_wordle')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('API request failed');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('API response:', data);
+                            if (data && data.seed) {
+                                resolve(data.seed);
+                            } else {
+                                throw new Error('Invalid API response format');
+                            }
+                        })
+                        .catch(error => {
+                            console.warn('API failed, generating fallback seed:', error);
+                            // Generate our own seed if API fails
+                            const allDistricts = getDistrictsArray();
+                            const generateRandomSeed = () => {
+                                const indices = [];
+                                while (indices.length < 4) {
+                                    const randomIndex = Math.floor(Math.random() * allDistricts.length);
+                                    if (!indices.includes(randomIndex)) {
+                                        indices.push(randomIndex);
+                                    }
+                                }
+                                return indices.join('-');
+                            };
+                            resolve(generateRandomSeed());
+                        });
                 });
             }
 
