@@ -229,12 +229,11 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">BD Maps</div>
+            <div class="logo">Desi Wordle</div>
             <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#districts">Districts</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <button id="resetGame" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 font-semibold">
+                    New Game
+                </button>
             </ul>
         </div>
     </nav>
@@ -253,26 +252,25 @@
             </div>
         </div>
 
-        <!-- Game Status and Controls -->
-        <div class="max-w-2xl mx-auto mb-8 text-center">
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                <div class="text-white mb-4">
+        <div class="mx-auto mb-8 text-center"> 
+            <!-- <div class="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20"> -->
+                <!-- <div class="text-white mb-4">
                     <div id="gameStatus" class="text-lg font-semibold mb-2">চেষ্টা: 0/5 | নির্বাচিত: 0/4</div>
                     <div class="text-sm text-gray-200">
                         <span class="inline-block w-4 h-4 bg-green-500 rounded mr-2"></span>সঠিক
                         <span class="inline-block w-4 h-4 bg-yellow-500 rounded mr-2 ml-4"></span>একই বিভাগ
                         <span class="inline-block w-4 h-4 bg-red-500 rounded mr-2 ml-4"></span>ভুল
                     </div>
-                </div>
-                <button id="resetGame" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 font-semibold">
+                </div> -->
+                <!-- <button id="resetGame" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors duration-200 font-semibold">
                     নতুন গেম (New Game)
-                </button>
-            </div>
-        </div>
+                </button> -->
+            <!-- </div> -->
+        </div> -->
 
         <!-- Map Container -->
         <div class="map-container">
-            <div class="map-wrapper">
+            <div class="map-wrapper ">
 <!-- 
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -1188,12 +1186,9 @@
             });
         }
 
-        // Log some useful information about the districts map
-        console.log(`Total districts in map: ${getDistrictsCount()}`);
-        console.log('All district IDs:', getAllDistrictNames());
 
         // Sample API response - in real implementation, this would come from your API
-        const sampleApiResponse = "4-33-2-1"; // Sample string for today's districts
+        const sampleApiResponse = "4-33-2-9"; // Sample string for today's districts
 
         // Function to simulate API call
         async function getTodaysDistrictsString() {
@@ -1231,22 +1226,17 @@
         function createDistrictCard(district) {
             const card = document.createElement('div');
             card.className = `
-                relative bg-white/90 backdrop-blur-sm rounded-xl p-3 md:p-4 
-                shadow-lg hover:shadow-xl transition-all duration-300 
-                cursor-pointer transform hover:scale-105 
-                border border-white/20 group
-                min-w-[120px] md:min-w-[140px] text-center
+                bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20
+                shadow hover:shadow-lg transition-all duration-200
+                cursor-pointer group min-w-[90px] text-center flex flex-col items-center justify-center
+                h-20
             `;
-            
+
             card.innerHTML = `
-                <div class="text-blue-600 font-bold text-sm md:text-base mb-1">
+                <div class="text-white font-bold text-lg mb-1 flex items-center justify-center h-full w-full">
                     ${district.bangla}
                 </div>
-                <div class="text-gray-600 text-xs hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    ${district.info}
-                </div>
-                <!-- Tooltip for mobile -->
-                <div class="md:hidden text-gray-500 text-xs mt-1">
+                <div class="md:hidden text-gray-200 text-xs mt-1 flex items-center justify-center">
                     ${district.english}
                 </div>
             `;
@@ -1401,35 +1391,31 @@
             currentTry++;
             updateGameStatus();
             
-            selectedDistricts.forEach(districtId => {
+            selectedDistricts.forEach((districtId, index) => {
                 const path = document.getElementById(districtId);
                 if (!path) return;
+                console.log(targetDistricts, districtId);
                 
                 if (targetDistricts.includes(districtId)) {
-                    // Correct guess - green
-                    path.style.fill = '#27ae60';
-                    districtStates[districtId] = 'correct';
-                    path.style.strokeWidth = '3px';
-                } else {
-                    // Check if same division
-                    const selectedDistrict = districtsMap[districtId];
-                    const isCorrectDivision = targetDistricts.some(targetId => {
-                        const targetDistrict = districtsMap[targetId];
-                        return targetDistrict && selectedDistrict && 
-                               targetDistrict.division === selectedDistrict.division;
-                    });
                     
-                    if (isCorrectDivision) {
-                        // Same division - yellow
-                        path.style.fill = '#f1c40f';
-                        districtStates[districtId] = 'wrong-division';
-                        path.style.strokeWidth = '2px';
+                    if (targetDistricts[index] === districtId) {
+                        // Correct guess - green
+                        path.style.fill = '#27ae60';
+                        districtStates[districtId] = 'correct';
+                        path.style.strokeWidth = '3px';
                     } else {
+                        // Correct district but wrong position - blue
+                        path.style.fill = '#f1c40f';
+                        districtStates[districtId] = 'wrong-position';
+                        path.style.strokeWidth = '2px';
+                }
+                } else {
+                    
                         // Wrong - red
                         path.style.fill = '#e74c3c';
                         districtStates[districtId] = 'wrong';
                         path.style.strokeWidth = '2px';
-                    }
+                    
                 }
             });
             
