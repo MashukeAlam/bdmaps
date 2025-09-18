@@ -229,6 +229,71 @@
                     transform: rotate(360deg);
                 }
             }
+
+            /* Modal Styles */
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+
+            .modal-content {
+                background: rgba(41, 41, 41, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                padding: 2rem;
+                max-width: 500px;
+                margin: 2rem;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                color: #ffffff;
+            }
+
+            .modal-title {
+                font-size: 1.8rem;
+                font-weight: bold;
+                color: #ffffff;
+                margin-bottom: 1rem;
+            }
+
+            .modal-text {
+                font-size: 1.1rem;
+                line-height: 1.6;
+                color: #fff;
+                margin-bottom: 1.5rem;
+                font-family: 'Arial', sans-serif;
+            }
+
+            .start-button {
+                background: linear-gradient(135deg, #000000 0%, #000000 100%);
+                color: white;
+                border: none;
+                padding: 1rem 2rem;
+                border-radius: 5px;
+                font-size: 1.3rem;
+                font-weight: bold;
+                cursor: pointer;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+            }
+
+            /* .start-button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            } */
+
+            .hidden {
+                display: none;
+            }
         </style>
     </head>
     <body>
@@ -247,6 +312,22 @@
                 </ul>
             </div>
         </nav>
+
+        <!-- Game Rules Modal -->
+        <div id="rulesModal" class="modal">
+            <div class="modal-content">
+                <h2 class="modal-title">গেমের নিয়ম</h2>
+                <div class="modal-text">
+                    <p>আপনি চারটি জেলা দেখতে পাবেন। অনুগ্রহ করে উপরে যে ক্রমে দেখানো হয়েছে সেই ক্রমে চারটি জেলা নির্বাচন করুন।</p>
+                    <p class="font-bold">আপনার সর্বোচ্চ ১০টি চেষ্টার সুযোগ রয়েছে।</p>
+                    <br>
+                    <p><strong class="text-green-500">সবুজ:</strong> সঠিক জেলা সঠিক ক্রমে নির্বাচিত</p>
+                    <p><strong class="text-yellow-500">হলুদ:</strong> সঠিক জেলা কিন্তু ভুল ক্রমে</p>
+                    <p><strong class="text-red-500">লাল:</strong> ভুল জেলা (তালিকায় নেই)</p>
+                </div>
+                <button id="startGameButton" class="start-button">গেম শুরু করুন</button>
+            </div>
+        </div>
 
         <!-- Main Container -->
         <div class="container">
@@ -1409,6 +1490,20 @@
         </div>
 
         <script>
+            // Modal functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const modal = document.getElementById('rulesModal');
+                const startButton = document.getElementById('startGameButton');
+                
+                // Show modal when page loads
+                modal.style.display = 'flex';
+                
+                // Hide modal when start button is clicked
+                startButton.addEventListener('click', function() {
+                    modal.style.display = 'none';
+                });
+            });
+
             // District information map - extracted from SVG path IDs with additional info
             const districtsMap = {
                 rajshahi: {
@@ -1978,7 +2073,7 @@
             let selectedDistricts = [];
             let targetDistricts = [];
             let currentTry = 0;
-            const maxTries = 5;
+            const maxTries = 10;
             let gameEnded = false;
             let districtStates = {}; // Track colors for each district
 
@@ -2087,18 +2182,18 @@
                             path.style.fill = "#f1c40f";
                             districtStates[districtId] = "wrong-position";
                             path.style.strokeWidth = "2px";
-                            document
-                                .querySelector(`.district-grabber-${index}`)
-                                .classList.add("bg-yellow-500");
+                            // document
+                            //     .querySelector(`.district-grabber-${index}`)
+                            //     .classList.add("bg-yellow-500");
                         }
                     } else {
                         // Wrong - red
                         path.style.fill = "#e74c3c";
                         districtStates[districtId] = "wrong";
                         path.style.strokeWidth = "2px";
-                        document
-                            .querySelector(`.district-grabber-${index}`)
-                            .classList.add("bg-red-500");
+                        // document
+                        //     .querySelector(`.district-grabber-${index}`)
+                        //     .classList.add("bg-red-500");
                     }
                 });
 
